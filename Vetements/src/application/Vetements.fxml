@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="application.VetementsController">
+   <children>
+      <Text layoutX="243.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Vetements">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Text>
+      <TableView layoutX="92.0" layoutY="79.0" prefHeight="168.0" prefWidth="416.0">
+        <columns>
+          <TableColumn prefWidth="151.0" text="Nom du Vetement" />
+          <TableColumn prefWidth="104.0" text="Type" />
+            <TableColumn prefWidth="83.0" text="Quantité" />
+            <TableColumn prefWidth="77.0" text="Prix" />
+        </columns>
+      </TableView>
+      <GridPane layoutX="94.0" layoutY="281.0" prefHeight="90.0" prefWidth="416.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+      </GridPane>
+   </children>
+</AnchorPane>
