@@ -1,17 +1,29 @@
 package application;
 
+import java.io.File;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 public class VetementsController {
 
@@ -60,13 +72,13 @@ public class VetementsController {
     private ObservableList<String> list=(ObservableList<String>) FXCollections.observableArrayList("Chemise", "Pantalon", "Veste", "Jupe", "Chandail"); 
 
     //Placer les vetements dans une observable list
-    public ObservableList<Vetements> etudiantData=FXCollections.observableArrayList();
+    public ObservableList<Vetements> vetementsData=FXCollections.observableArrayList();
 
     //Créer une méthode pour accéder à la liste des vetements
 
     public ObservableList<Vetements> getetudiantData()
     {
-    	return etudiantData;
+    	return vetementsData;
     }
 
     public void initialize(URL location, ResourceBundle resources) 
@@ -77,7 +89,7 @@ public class VetementsController {
 		typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
 		quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantité"));
 		prixColumn.setCellValueFactory(new PropertyValueFactory<>("prix"));
-		vetementsTable.setItems(etudiantData);
+		vetementsTable.setItems(vetementsData);
 		
 		btnModifier.setDisable(true);
 		btnEffacer.setDisable(true);
@@ -109,11 +121,293 @@ public class VetementsController {
 		
 	}
 	
+	//Ajouter des vetements
+	@FXML
+	void ajouter()
+	{
+		//vérifier si un champ n'est pas vide
+		if(noEmptyInput())
+		{
+			Vetements tmp=new Vetements();
+
+			tmp=new Vetements();
+			tmp.setNom(txtNom.getText());
+			tmp.setPrix(Double.parseDouble(txtPrix.getText()));
+			tmp.setQuantity(Double.parseDouble(txtQuantity.getText()));
+			tmp.setType(cboType.getValue());
+			vetementsData.add(tmp);
+			clearFields();
+		}
+
+	}
 
 
 
+	//Effacer le contenu des champs
+	@FXML
+	void clearFields()
+	{
+		cboType.setValue(null);
+		txtNom.setText("");
+		txtQuantity.setText("");
+		txtPrix.setText("");
+
+	}
+	
+	//Afficher les vetements
+			public void showEtudiants(Vetements etudiant)
+			{
+				if(etudiant !=null)
+				{
+					
+					Vetements vetements = null;
+					cboType.setValue(vetements.getType());
+					txtNom.setText(etudiant.getNom());
+					txtPrix.setText(Double.toString(vetements.getPrix()));
+					btnModifier.setDisable(false);
+					btnEffacer.setDisable(false);
+					btnClear.setDisable(false);
+					
+				}
+				else
+				{
+					clearFields();
+				}
+				
+				
+			}
+
+			//mise à jour d'un vetement
+			@FXML
+			public void updateEtudiant()
+			{
+				//vérifier si un champ n'est pas vide
+				if(noEmptyInput())
+				{
+					Vetements etudiant=vetementsTable.getSelectionModel().getSelectedItem();
+
+					Vetements vetements = null;
+					vetements.setNom(txtNom.getText());
+					vetements.setType(cboType.getValue());
+					vetements.setPrix(Double.parseDouble(txtPrix.getText()));
+					vetements.setQuantity(Double.parseDouble(txtQuantity.getText()));
+					vetementsTable.refresh();
+				}
+
+			}
+			//effacer un vetement
+			@FXML
+			public void deleteEtudiant()
+			{
+				int selectedIndex = vetementsTable.getSelectionModel().getSelectedIndex();
+				if (selectedIndex >=0)
+				{
+					Alert alert=new Alert(AlertType.CONFIRMATION);
+					alert.setTitle("Effaver");
+					alert.setContentText("confirmer la suppression!");
+					Optional<ButtonType> result=alert.showAndWait();
+					if(result.get()==ButtonType.OK)
+						vetementsTable.getItems().remove(selectedIndex);
+				}
+			}
+	    
+
+			//vérifier champs vides
+			private boolean noEmptyInput()
+			{
+				String errorMessage="";
+				if(txtNom.getText().trim().equals(""))
+				{
+					errorMessage+="Le champ nom ne doit pas être vide! \n";
+				}
+				if(txtQuantity.getText()==null||txtQuantity.getText().length()==0)
+				{
+					errorMessage+="Le champ quantité ne doit pas être vide! \n";
+				}
+				if(txtPrix.getText()==null||txtPrix.getText().length()==0)
+				{
+					errorMessage+="Le champ prix ne doit pas être vide! \n";
+				}
+				if(cboType.getValue()==null)
+				{
+					errorMessage+="Lechamp type ne doit pas être vide! \n";
+				}
+				
+				if(errorMessage.length()==0)
+				{
+					return true;
+				}
+				else
+				{
+					Alert alert=new Alert(AlertType.ERROR);
+					alert.setTitle("Champs manquants");
+					alert.setHeaderText("Completer les champs manquants");
+					alert.setContentText(errorMessage);
+					alert.showAndWait();
+					return false;
+				}
+			}
+			
+			
+		    //SAUVEGARDE DE DONNÉES
+			
+				//Recupérer le chemin des fichiers si ca existe
+			public File getEtudiantFilePath()
+			{
+				Preferences prefs = Preferences.userNodeForPackage(Main.class);
+						String filePath = prefs.get("filePath", null);
+						
+						if (filePath != null)
+						{
+							return new File(filePath);
+						}
+						else
+						{
+							return null;
+						}
+						
+			}
 
 
-
-
+			//Attribuer un chemin de fichiers
+			
+			public void setEtudiantFilePath(File file)
+			{
+				Preferences prefs = Preferences.userNodeForPackage(Main.class);
+				if (file != null)
+				{
+					prefs.put("filePath", file.getPath());
+				}
+				else
+				{
+					prefs.remove("filePath");
+				}
+			}
+		    
+			//Prendre les données de type XML et les convertir en données de type javafx
+			public void loadEtudiantDataFromFile(File file)
+			{
+				try {
+					JAXBContext context = JAXBContext.newInstance(VetementListWrapper.class);
+					Unmarshaller um = context.createUnmarshaller();
+					
+					VetementListWrapper wrapper = (VetementListWrapper) um.unmarshal(file);
+					vetementsData.clear();
+					vetementsData.addAll(wrapper.getEtudiants());
+					setEtudiantFilePath(file);
+					
+					//donner le titre du fichier chargé
+					Stage pStage=(Stage) vetementsTable.getScene().getWindow();
+					pStage.setTitle(file.getName());
+					
+				} catch(Exception e) {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Erreur");
+					alert.setHeaderText("les données n'ont pas été trouvées");
+					alert.setContentText("Les données ne pouvaient pas étre trouvées dans le fichier : \n" +file.getPath());
+					alert.showAndWait();
+					
+				
+				}
+			}
+				
+			//Prendre les données de type JavaFx et els convertir en type XML
+			public void saveEtudiantDataToFile(File file) {
+				try {
+					JAXBContext context = JAXBContext.newInstance(VetementListWrapper.class);
+					Marshaller m = context.createMarshaller();
+					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+					VetementListWrapper wrapper = new VetementListWrapper();
+					wrapper.setEtudiants(vetementsData);
+					
+					m.marshal(wrapper, file);
+					
+					//sauvegarder dans le registre
+					setEtudiantFilePath(file);
+					
+					//donner le titre du fichier sauvegardé
+					Stage pStage=(Stage) vetementsTable.getScene().getWindow();
+					pStage.setTitle(file.getName());
+					
+				} catch (Exception e) {
+					
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Erreur");
+					alert.setHeaderText("Données non sauvegardées");
+					alert.setContentText("Les données ne pouvaient pas être sauvegardées dans le fichier:\n" + file.getPath());
+					alert.showAndWait();
+					
+				}
+			}
+			
+			//commencer un nouveau
+			@FXML
+			private void handleNew()
+			{
+				getetudiantData().clear();
+				setEtudiantFilePath(null);
+			}
+			
+			/*
+			 * Le FileChooser permet à l'usager de choisir le fichier à ouvrir.
+			 */
+			@FXML
+			private void handleOpen() {
+				FileChooser fileChooser = new FileChooser();
+				
+				//permettre un filtre sur l'extension du fichier à chercher
+				FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+						"XML file (*.xml)", "*.xml");
+				fileChooser.getExtensionFilters().add(extFilter);
+				
+				//montrer le dialogue
+				File file = fileChooser.showOpenDialog(null);
+				
+				if(file != null) {
+					loadEtudiantDataFromFile(file);
+				}
+				
+			}
+			
+			/*
+			 * Sauvegarde le fichier correspondant à l'étudiant actif
+			 * S'il n y a pas de fichier, le menu sauvegarder sous va s'afficher
+			 */
+			@FXML
+			private void handleSave() {
+				
+				File etudiantFile = getEtudiantFilePath();
+				if (etudiantFile != null) {
+					saveEtudiantDataToFile(etudiantFile);
+					
+				} else {
+					handleSaveAs();
+				}
+			}
+			
+			/*
+			 * Ouvrir le FileChooser pour trouver le chemin
+			 */
+			@FXML
+			private void handleSaveAs() {
+				FileChooser fileChooser = new FileChooser();
+				
+				FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+						"XML file (*.xml)", "*.xml");
+				fileChooser.getExtensionFilters().add(extFilter);
+				
+				//sauvegarde
+				File file = fileChooser.showSaveDialog(null);
+				
+				if (file != null) {
+					//vérification de l'extension
+					if (!file.getPath().endsWith(".xml")) {
+						file = new File(file.getPath() + ".xml");
+					}
+					saveEtudiantDataToFile(file);
+				}
+				
+			}
+			
+		}
 
