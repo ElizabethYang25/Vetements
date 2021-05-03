@@ -40,24 +40,24 @@
             <Label text="Prix" GridPane.rowIndex="3" />
             <ComboBox fx:id="cboType" prefHeight="33.0" prefWidth="298.0" promptText="Choix Type" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="txtNom" prefHeight="31.0" prefWidth="298.0" GridPane.columnIndex="1" />
-            <TextField fx:id="txtPrix" prefHeight="32.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TextField fx:id="txtQuantity" prefHeight="34.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="txtPrix" onAction="#verifNum" onKeyPressed="#verifNum" prefHeight="32.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="txtQuantity" onAction="#verifNum1" onKeyPressed="#verifNum1" prefHeight="34.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
       </GridPane>
       <HBox layoutX="212.0" layoutY="431.0">
          <children>
-            <Button fx:id="btnAjouter" layoutX="224.0" layoutY="431.0" mnemonicParsing="false" text="Ajouter" />
-            <Button fx:id="btnModifier" layoutX="290.0" layoutY="431.0" mnemonicParsing="false" text="Modifier">
+            <Button fx:id="btnAjouter" layoutX="224.0" layoutY="431.0" mnemonicParsing="false" onAction="#ajouter" text="Ajouter" />
+            <Button fx:id="btnModifier" layoutX="290.0" layoutY="431.0" mnemonicParsing="false" onAction="#updateVetements" text="Modifier">
                <HBox.margin>
                   <Insets left="7.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="btnEffacer" layoutX="357.0" layoutY="431.0" mnemonicParsing="false" text="Effacer">
+            <Button fx:id="btnEffacer" layoutX="357.0" layoutY="431.0" mnemonicParsing="false" onAction="#deleteVetements" text="Effacer">
                <HBox.margin>
                   <Insets left="7.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="btnClear" layoutX="421.0" layoutY="431.0" mnemonicParsing="false" text="Recommencer">
+            <Button fx:id="btnClear" layoutX="421.0" layoutY="431.0" mnemonicParsing="false" onAction="#clearFields" text="Recommencer">
                <HBox.margin>
                   <Insets left="7.0" />
                </HBox.margin>
@@ -71,10 +71,10 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Nouveau" />
-                  <MenuItem mnemonicParsing="false" text="Ouvrir" />
-                  <MenuItem mnemonicParsing="false" text="Sauvegarder" />
-                  <MenuItem mnemonicParsing="false" text="Sauvegarder sous" />
+              <MenuItem mnemonicParsing="false" onAction="#handleNew" text="Nouveau" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleOpen" text="Ouvrir" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Sauvegarder" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleSaveAs" text="Sauvegarder sous" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">

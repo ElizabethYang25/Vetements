@@ -2,6 +2,7 @@ package application;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
@@ -13,6 +14,7 @@ import javax.xml.bind.Unmarshaller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -25,7 +27,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-public class VetementsController {
+public class VetementsController implements Initializable{
 
     @FXML
     private TextField txtPrix;
@@ -69,7 +71,7 @@ public class VetementsController {
 
 
     //liste des types de vetements
-    private ObservableList<String> list=(ObservableList<String>) FXCollections.observableArrayList("Chemise", "Pantalon", "Veste", "Jupe", "Chandail"); 
+    private ObservableList<String> listT=(ObservableList<String>) FXCollections.observableArrayList("Chemise", "Pantalon", "Veste", "Jupe", "Chandail"); 
 
     //Placer les vetements dans une observable list
     public ObservableList<Vetements> vetementsData=FXCollections.observableArrayList();
@@ -81,9 +83,10 @@ public class VetementsController {
     	return vetementsData;
     }
 
+    @Override
     public void initialize(URL location, ResourceBundle resources) 
 	{
-		cboType.setItems(list);
+		cboType.setItems(listT);
 		//attribuer les valeurs aux colonnes du tableView
 		nomColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
 		typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
@@ -103,12 +106,25 @@ public class VetementsController {
 	}
 
     private void showVetements(Object object) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@FXML
-	public void verifNum () //methode pour trouver des input non numériques
+	public void verifNum() //methode pour trouver des input non numériques
+	{
+		txtPrix.textProperty().addListener((observable,oldValue,newValue)->
+		{
+			if(!newValue.matches("^[0-9](\\.[0-9]+)?$"))
+		
+		{
+			txtPrix.setText(newValue.replaceAll("[^\\d*\\.]","")); //si le input est non numérique, ca le remplace
+		}
+		}); 
+		
+	}
+	
+	@FXML
+	public void verifNum1() //methode pour trouver des input non numériques
 	{
 		txtQuantity.textProperty().addListener((observable,oldValue,newValue)->
 		{
@@ -155,7 +171,7 @@ public class VetementsController {
 	}
 	
 	//Afficher les vetements
-			public void showEtudiants(Vetements etudiant)
+			public void showVetements(Vetements etudiant)
 			{
 				if(etudiant !=null)
 				{
@@ -164,6 +180,7 @@ public class VetementsController {
 					cboType.setValue(vetements.getType());
 					txtNom.setText(etudiant.getNom());
 					txtPrix.setText(Double.toString(vetements.getPrix()));
+					txtQuantity.setText(Double.toString(vetements.getQuantity()));
 					btnModifier.setDisable(false);
 					btnEffacer.setDisable(false);
 					btnClear.setDisable(false);
@@ -179,7 +196,7 @@ public class VetementsController {
 
 			//mise à jour d'un vetement
 			@FXML
-			public void updateEtudiant()
+			public void updateVetements()
 			{
 				//vérifier si un champ n'est pas vide
 				if(noEmptyInput())
@@ -197,7 +214,7 @@ public class VetementsController {
 			}
 			//effacer un vetement
 			@FXML
-			public void deleteEtudiant()
+			public void deleteVetements()
 			{
 				int selectedIndex = vetementsTable.getSelectionModel().getSelectedIndex();
 				if (selectedIndex >=0)
@@ -252,7 +269,7 @@ public class VetementsController {
 		    //SAUVEGARDE DE DONNÉES
 			
 				//Recupérer le chemin des fichiers si ca existe
-			public File getEtudiantFilePath()
+			public File getVetementsFilePath()
 			{
 				Preferences prefs = Preferences.userNodeForPackage(Main.class);
 						String filePath = prefs.get("filePath", null);
@@ -271,7 +288,7 @@ public class VetementsController {
 
 			//Attribuer un chemin de fichiers
 			
-			public void setEtudiantFilePath(File file)
+			public void setVetementsFilePath(File file)
 			{
 				Preferences prefs = Preferences.userNodeForPackage(Main.class);
 				if (file != null)
@@ -285,7 +302,7 @@ public class VetementsController {
 			}
 		    
 			//Prendre les données de type XML et les convertir en données de type javafx
-			public void loadEtudiantDataFromFile(File file)
+			public void loadVetementsDataFromFile(File file)
 			{
 				try {
 					JAXBContext context = JAXBContext.newInstance(VetementListWrapper.class);
@@ -294,7 +311,7 @@ public class VetementsController {
 					VetementListWrapper wrapper = (VetementListWrapper) um.unmarshal(file);
 					vetementsData.clear();
 					vetementsData.addAll(wrapper.getEtudiants());
-					setEtudiantFilePath(file);
+					setVetementsFilePath(file);
 					
 					//donner le titre du fichier chargé
 					Stage pStage=(Stage) vetementsTable.getScene().getWindow();
@@ -312,7 +329,7 @@ public class VetementsController {
 			}
 				
 			//Prendre les données de type JavaFx et els convertir en type XML
-			public void saveEtudiantDataToFile(File file) {
+			public void saveVetementsDataToFile(File file) {
 				try {
 					JAXBContext context = JAXBContext.newInstance(VetementListWrapper.class);
 					Marshaller m = context.createMarshaller();
@@ -323,7 +340,7 @@ public class VetementsController {
 					m.marshal(wrapper, file);
 					
 					//sauvegarder dans le registre
-					setEtudiantFilePath(file);
+					setVetementsFilePath(file);
 					
 					//donner le titre du fichier sauvegardé
 					Stage pStage=(Stage) vetementsTable.getScene().getWindow();
@@ -344,8 +361,8 @@ public class VetementsController {
 			@FXML
 			private void handleNew()
 			{
-				getetudiantData().clear();
-				setEtudiantFilePath(null);
+				((List<String>) getVetementsFilePath()).clear();
+				setVetementsFilePath(null);
 			}
 			
 			/*
@@ -364,21 +381,21 @@ public class VetementsController {
 				File file = fileChooser.showOpenDialog(null);
 				
 				if(file != null) {
-					loadEtudiantDataFromFile(file);
+					loadVetementsDataFromFile(file);
 				}
 				
 			}
 			
 			/*
-			 * Sauvegarde le fichier correspondant à l'étudiant actif
+			 * Sauvegarde le fichier correspondant à le vetement actif
 			 * S'il n y a pas de fichier, le menu sauvegarder sous va s'afficher
 			 */
 			@FXML
 			private void handleSave() {
 				
-				File etudiantFile = getEtudiantFilePath();
+				File etudiantFile = getVetementsFilePath();
 				if (etudiantFile != null) {
-					saveEtudiantDataToFile(etudiantFile);
+					saveVetementsDataToFile(etudiantFile);
 					
 				} else {
 					handleSaveAs();
@@ -404,7 +421,7 @@ public class VetementsController {
 					if (!file.getPath().endsWith(".xml")) {
 						file = new File(file.getPath() + ".xml");
 					}
-					saveEtudiantDataToFile(file);
+					saveVetementsDataToFile(file);
 				}
 				
 			}
