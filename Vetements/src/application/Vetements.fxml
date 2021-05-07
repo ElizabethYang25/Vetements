@@ -30,8 +30,8 @@
         <rowConstraints>
           <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="34.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label text="Nom du Vetement" />
@@ -40,14 +40,14 @@
             <Label text="Prix" GridPane.rowIndex="3" />
             <ComboBox fx:id="cboType" prefHeight="33.0" prefWidth="298.0" promptText="Choix Type" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="txtNom" prefHeight="31.0" prefWidth="298.0" GridPane.columnIndex="1" />
-            <TextField fx:id="txtPrix" onAction="#verifNum" onKeyPressed="#verifNum" prefHeight="32.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="txtPrix" onAction="#verifNum" onKeyPressed="#verifNum" prefHeight="42.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="txtQuantity" onAction="#verifNum1" onKeyPressed="#verifNum1" prefHeight="34.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
       </GridPane>
       <HBox layoutX="212.0" layoutY="431.0">
          <children>
             <Button fx:id="btnAjouter" layoutX="224.0" layoutY="431.0" mnemonicParsing="false" onAction="#ajouter" text="Ajouter" />
-            <Button fx:id="btnModifier" layoutX="290.0" layoutY="431.0" mnemonicParsing="false" onAction="#updateVetements" text="Modifier">
+            <Button fx:id="btnModifier" layoutX="290.0" layoutY="431.0" mnemonicParsing="false" onAction="#updateVetements" onKeyPressed="#updateVetements" text="Modifier">
                <HBox.margin>
                   <Insets left="7.0" />
                </HBox.margin>

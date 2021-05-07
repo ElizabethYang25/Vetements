@@ -4,20 +4,19 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="vetements")
 public class VetementListWrapper 
 {
 	private List<Vetements> vetements;
 	@XmlElement(name="vetements")
-	public List<Vetements> getEtudiants()
+	public List<Vetements> getVetements()
 	{
 		return vetements;
 	}
-	public void setEtudiants(List<Vetements> etudiants)
+	public void setVetements(List<Vetements> vetements)
 	{
-		this.vetements=etudiants;
+		this.vetements=vetements;
 	}
 	
 }

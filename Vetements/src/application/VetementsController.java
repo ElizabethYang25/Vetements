@@ -2,7 +2,6 @@ package application;
 
 import java.io.File;
 import java.net.URL;
-import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
@@ -17,7 +16,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -90,7 +88,7 @@ public class VetementsController implements Initializable{
 		//attribuer les valeurs aux colonnes du tableView
 		nomColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
 		typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
-		quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantité"));
+		quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 		prixColumn.setCellValueFactory(new PropertyValueFactory<>("prix"));
 		vetementsTable.setItems(vetementsData);
 		
@@ -100,14 +98,12 @@ public class VetementsController implements Initializable{
 		
 		showVetements(null);
 		//Mettre à jour l'affichage d'un étudiant sélectrionné
-			vetementsTable.getSelectionModel().selectedItemProperty().addListener((
-						observable, oldValue, newValue)-> showVetements(newValue));
-		
+		vetementsTable.getSelectionModel().selectedItemProperty().addListener((
+				observable, oldValue, newValue)-> showVetements(newValue));
+
 	}
 
-    private void showVetements(Object object) {
-		
-	}
+
 
 	@FXML
 	public void verifNum() //methode pour trouver des input non numériques
@@ -153,11 +149,10 @@ public class VetementsController implements Initializable{
 			tmp.setType(cboType.getValue());
 			vetementsData.add(tmp);
 			clearFields();
+			
 		}
 
 	}
-
-
 
 	//Effacer le contenu des champs
 	@FXML
@@ -171,28 +166,27 @@ public class VetementsController implements Initializable{
 	}
 	
 	//Afficher les vetements
-			public void showVetements(Vetements etudiant)
-			{
-				if(etudiant !=null)
-				{
-					
-					Vetements vetements = null;
-					cboType.setValue(vetements.getType());
-					txtNom.setText(etudiant.getNom());
-					txtPrix.setText(Double.toString(vetements.getPrix()));
-					txtQuantity.setText(Double.toString(vetements.getQuantity()));
-					btnModifier.setDisable(false);
-					btnEffacer.setDisable(false);
-					btnClear.setDisable(false);
-					
-				}
-				else
-				{
-					clearFields();
-				}
-				
-				
-			}
+	public void showVetements(Vetements vetements)
+	{
+		if(vetements !=null)
+		{
+
+			cboType.setValue(vetements.getType());
+			txtNom.setText(vetements.getNom());
+			txtPrix.setText(Double.toString(vetements.getPrix()));
+			txtQuantity.setText(Double.toString(vetements.getQuantity()));
+			btnModifier.setDisable(false);
+			btnEffacer.setDisable(false);
+			btnClear.setDisable(false);
+
+		}
+		else
+		{
+			clearFields();
+		}
+
+
+	}
 
 			//mise à jour d'un vetement
 			@FXML
@@ -201,9 +195,8 @@ public class VetementsController implements Initializable{
 				//vérifier si un champ n'est pas vide
 				if(noEmptyInput())
 				{
-					Vetements etudiant=vetementsTable.getSelectionModel().getSelectedItem();
+					Vetements vetements=vetementsTable.getSelectionModel().getSelectedItem();
 
-					Vetements vetements = null;
 					vetements.setNom(txtNom.getText());
 					vetements.setType(cboType.getValue());
 					vetements.setPrix(Double.parseDouble(txtPrix.getText()));
@@ -219,11 +212,6 @@ public class VetementsController implements Initializable{
 				int selectedIndex = vetementsTable.getSelectionModel().getSelectedIndex();
 				if (selectedIndex >=0)
 				{
-					Alert alert=new Alert(AlertType.CONFIRMATION);
-					alert.setTitle("Effaver");
-					alert.setContentText("confirmer la suppression!");
-					Optional<ButtonType> result=alert.showAndWait();
-					if(result.get()==ButtonType.OK)
 						vetementsTable.getItems().remove(selectedIndex);
 				}
 			}
@@ -310,7 +298,7 @@ public class VetementsController implements Initializable{
 					
 					VetementListWrapper wrapper = (VetementListWrapper) um.unmarshal(file);
 					vetementsData.clear();
-					vetementsData.addAll(wrapper.getEtudiants());
+					vetementsData.addAll(wrapper.getVetements());
 					setVetementsFilePath(file);
 					
 					//donner le titre du fichier chargé
@@ -335,7 +323,7 @@ public class VetementsController implements Initializable{
 					Marshaller m = context.createMarshaller();
 					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 					VetementListWrapper wrapper = new VetementListWrapper();
-					wrapper.setEtudiants(vetementsData);
+					wrapper.setVetements(vetementsData);
 					
 					m.marshal(wrapper, file);
 					
@@ -357,11 +345,10 @@ public class VetementsController implements Initializable{
 				}
 			}
 			
-			//commencer un nouveau
 			@FXML
 			private void handleNew()
 			{
-				((List<String>) getVetementsFilePath()).clear();
+				getetudiantData().clear();
 				setVetementsFilePath(null);
 			}
 			

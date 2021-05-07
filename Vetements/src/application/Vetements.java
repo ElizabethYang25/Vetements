@@ -12,7 +12,7 @@ public class Vetements
 	{
 		this(null);
 	}
-	
+
 	//contructeur avec 2 paramètre
 	public Vetements(String nom)
 	{
@@ -20,7 +20,7 @@ public class Vetements
 		this.type="";
 		this.prix=0.0;
 		this.quantity=0.0;
-			
+
 	}
 	public String getNom() {
 		return nom;
@@ -45,8 +45,9 @@ public class Vetements
 	}
 	public void setQuantity(double quantity) {
 		this.quantity = quantity;
+
 	}
-		
+
 }
 
 
