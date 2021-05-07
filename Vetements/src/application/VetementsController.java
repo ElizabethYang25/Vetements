@@ -185,7 +185,6 @@ public class VetementsController implements Initializable{
 			clearFields();
 		}
 
-
 	}
 
 			//mise à jour d'un vetement
@@ -235,7 +234,7 @@ public class VetementsController implements Initializable{
 				}
 				if(cboType.getValue()==null)
 				{
-					errorMessage+="Lechamp type ne doit pas être vide! \n";
+					errorMessage+="Le champ type ne doit pas être vide! \n";
 				}
 				
 				if(errorMessage.length()==0)

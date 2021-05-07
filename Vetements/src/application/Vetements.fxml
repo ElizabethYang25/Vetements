@@ -39,7 +39,7 @@
             <Label text="Quantité" GridPane.rowIndex="2" />
             <Label text="Prix" GridPane.rowIndex="3" />
             <ComboBox fx:id="cboType" prefHeight="33.0" prefWidth="298.0" promptText="Choix Type" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="txtNom" prefHeight="31.0" prefWidth="298.0" GridPane.columnIndex="1" />
+            <TextField fx:id="txtNom" prefHeight="37.0" prefWidth="298.0" GridPane.columnIndex="1" />
             <TextField fx:id="txtPrix" onAction="#verifNum" onKeyPressed="#verifNum" prefHeight="42.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="txtQuantity" onAction="#verifNum1" onKeyPressed="#verifNum1" prefHeight="34.0" prefWidth="298.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
